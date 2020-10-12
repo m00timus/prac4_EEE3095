@@ -17,6 +17,7 @@ buzzer = 33
 eeprom = ES2EEPROMUtils.ES2EEPROM()
 
 
+
 # Print the game banner
 def welcome():
     os.system('clear')
@@ -56,6 +57,23 @@ def menu():
         print("Invalid option. Please select a valid one!")
 
 
+class Counter():
+    def __init__(self):
+        self.cnt = 0
+
+    def increment(self):
+        self.cnt += 1
+
+    def reset(self):
+        self.cnt = 0
+
+    def get_value(self):
+        return self.cnt
+
+
+count = Counter()
+
+
 def display_scores(count, raw_data):
     # print the scores to the screen in the expected format
     print("There are {} scores. Here are the top 3!".format(count))
@@ -77,6 +95,7 @@ def callback2(channel):
 
 # Setup Pins
 def setup():
+    
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(LED_value[0], GPIO.OUT)
     GPIO.setup(LED_value[1], GPIO.OUT)
@@ -127,11 +146,14 @@ def generate_number():
     return random.randint(0, pow(2, 3)-1)
 
 # Increase button pressed
-def btn_increase_pressed(cnt):
-    GPIO.output(LED_value[0], cnt & 0x01)
-    GPIO.output(LED_value[1], cnt & 0x02)
-    GPIO.output(LED_value[2], cnt & 0x04)
-    cnt += 1 % 7
+def btn_increase_pressed(channel):
+    temp =count.get_value()
+    GPIO.output(LED_value[0], temp & 0x01)
+    GPIO.output(LED_value[1], temp & 0x02)
+    GPIO.output(LED_value[2], temp & 0x04)
+    count.increment()
+    if count.get_value() > 7:
+        count.reset()
     pass
 
 
