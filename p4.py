@@ -15,6 +15,8 @@ btn_increase = 18
 buzzer = 33
 eeprom = ES2EEPROMUtils.ES2EEPROM()
 
+cnt = 0
+
 
 # Print the game banner
 def welcome():
@@ -62,13 +64,13 @@ def display_scores(count, raw_data):
     pass
 
 def callback1(channel):
-    GPIO.output(LED_value, GPIO.HIGH)
-    print("rising edge detected on btn_submit")
+    #GPIO.output(LED_value, GPIO.HIGH)
+    print("falling edge detected on btn_submit")
     pass
 
 def callback2(channel):
-    GPIO.output(LED_value, GPIO.HIGH)
-    print("rising edge detected on btn_increase")
+    #GPIO.output(LED_value, GPIO.HIGH)
+    print("falling edge detected on btn_increase")
     pass
 
 # Setup Pins
@@ -88,9 +90,8 @@ def setup():
 
     pi_pwm = GPIO.PWM(LED_accuracy, 1000)
     pi_pwm2 = GPIO.PWM(buzzer, 1000)
-    #GPIO.output(LED_value, GPIO.HIGH, GPIO.LOW, GPIO.HIGH)
-    GPIO.add_event_detect(btn_submit, GPIO.BOTH, callback=callback1, bouncetime=200)
-    GPIO.add_event_detect(btn_increase, GPIO.BOTH, callback=callback2, bouncetime=200)
+    GPIO.add_event_detect(btn_submit, GPIO.FALLING, callback=callback1, bouncetime=200)
+    GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=btn_increase_pressed, bouncetime=200)
 
     # Setup debouncing and callbacks
     pass
@@ -126,7 +127,15 @@ def generate_number():
 
 # Increase button pressed
 def btn_increase_pressed(channel):
-
+    
+    try:
+	    while True:
+		    GPIO.output(LED_value[0], cnt & 0x01) # set bit 0
+		    GPIO.output(LED_value[1], cnt & 0x02) 
+		    GPIO.output(LED_value[2],  cnt & 0x04) # set bit 2
+		    cnt += 1 %  7				# increment counter up to 7, then reset to 0
+    except KeyboardInterrupt:
+	    GPIO.cleanup()
     # Increase the value shown on the LEDs
     # You can choose to have a global variable store the user's current guess, 
     # or just pull the value off the LEDs when a user makes a guess
