@@ -15,8 +15,6 @@ btn_increase = 18
 buzzer = 33
 eeprom = ES2EEPROMUtils.ES2EEPROM()
 
-#cnt = 0
-
 
 # Print the game banner
 def welcome():
@@ -92,7 +90,7 @@ def setup():
     pi_pwm = GPIO.PWM(LED_accuracy, 1000)
     pi_pwm2 = GPIO.PWM(buzzer, 1000)
     GPIO.add_event_detect(btn_submit, GPIO.FALLING, callback=callback1, bouncetime=200)
-    GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=btn_increase_pressed, bouncetime=200)
+    GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=btn_increase_pressed(cnt), bouncetime=200)
 
     # Setup debouncing and callbacks
     pass
@@ -126,14 +124,11 @@ def generate_number():
     return random.randint(0, pow(2, 3)-1)
 
 # Increase button pressed
-def btn_increase_pressed(channel):
-	GPIO.output(LED_value[0], cnt & 0x01) # set bit 0
-	GPIO.output(LED_value[1], cnt & 0x02)
-    GPIO.output(LED_value[2], cnt & 0x04)# set bit 2
-	cnt += 1 %  7				# increment counter up to 7, then reset to 0
-    # Increase the value shown on the LEDs
-    # You can choose to have a global variable store the user's current guess, 
-    # or just pull the value off the LEDs when a user makes a guess
+def btn_increase_pressed(cnt):
+    GPIO.output(LED_value[0], cnt & 0x01)
+    GPIO.output(LED_value[1], cnt & 0x02)
+    GPIO.output(LED_value[2], cnt & 0x04)
+    cnt += 1 % 7
     pass
 
 
