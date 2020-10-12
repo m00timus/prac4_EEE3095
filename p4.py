@@ -60,6 +60,15 @@ def display_scores(count, raw_data):
     # print out the scores in the required format
     pass
 
+def callback1(channel):
+    GPIO.OUTPUT(LED_value[0], GPIO.HIGH)
+    print("rising edge detected on btn_submit")
+    pass
+
+def callback2(channel):
+
+    print("rising edge detected on btn_increase")
+    pass
 
 # Setup Pins
 def setup():
@@ -79,22 +88,14 @@ def setup():
     pi_pwm = GPIO.PWM(LED_accuracy, 1000)
     pi_pwm2 = GPIO.PWM(buzzer, 1000)
     #GPIO.output(LED_value, GPIO.HIGH, GPIO.LOW, GPIO.HIGH)
-    GPIO.add_event_detect(btn_submit, GPIO.FALLING, callback=callback1, bouncetime=200)
+    GPIO.add_event_detect(btn_submit, GPIO.RISING, callback=callback1, bouncetime=200)
 
-    GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=callback2, bouncetime=200)
+    GPIO.add_event_detect(btn_increase, GPIO.RISING, callback=callback2, bouncetime=200)
 
     # Setup debouncing and callbacks
     pass
 
-def callback1(channel):
 
-    print("rising edge detected on btn_submit")
-    pass
-
-def callback2(channel):
-
-    print("rising edge detected on btn_increase")
-    pass
 
 # Load high scores
 def fetch_scores():
