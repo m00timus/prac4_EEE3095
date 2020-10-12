@@ -89,8 +89,8 @@ def setup():
     pi_pwm = GPIO.PWM(LED_accuracy, 1000)
     pi_pwm2 = GPIO.PWM(buzzer, 1000)
     #GPIO.output(LED_value, GPIO.HIGH, GPIO.LOW, GPIO.HIGH)
-    GPIO.add_event_detect(btn_submit, GPIO.FALLING, callback=callback1, bouncetime=200)
-    GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=callback2, bouncetime=200)
+    GPIO.add_event_detect(btn_submit, GPIO.BOTH, callback=callback1, bouncetime=200)
+    GPIO.add_event_detect(btn_increase, GPIO.BOTH, callback=callback2, bouncetime=200)
 
     # Setup debouncing and callbacks
     pass
