@@ -66,9 +66,10 @@ def setup():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(LED_value, GPIO.OUT)
     GPIO.setup(LED_accuracy, GPIO.OUT)
-    GPIO.setup(btn_submit, GPIO.IN, pull_up_down=PUD_DOWN)
-    GPIO.setup(btn_increase, GPIO.IN, pull_up_down=PUD_DOWN)
+    GPIO.setup(btn_submit, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(btn_increase, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     pi_pwm = GPIO.PWM(LED_accuracy, 1000)
+    GPIO.output(LED_value, GPIO.HIGH, GPIO.LOW, GPIO.HIGH)
     # Setup debouncing and callbacks
     pass
 
