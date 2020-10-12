@@ -46,6 +46,7 @@ def menu():
         print("Press and hold the guess button to cancel your game")
         value = generate_number()
         while not end_of_game:
+            
             pass
     elif option == "Q":
         print("Come back soon!")
@@ -60,13 +61,13 @@ def display_scores(count, raw_data):
     # print out the scores in the required format
     pass
 
-def callback1(channel):
-    GPIO.OUTPUT(LED_value[0], GPIO.HIGH)
+def callback1():
+    GPIO.OUTPUT(LED_value, GPIO.HIGH)
     print("rising edge detected on btn_submit")
     pass
 
-def callback2(channel):
-
+def callback2():
+    GPIO.OUTPUT(LED_value, GPIO.HIGH)
     print("rising edge detected on btn_increase")
     pass
 
@@ -89,7 +90,6 @@ def setup():
     pi_pwm2 = GPIO.PWM(buzzer, 1000)
     #GPIO.output(LED_value, GPIO.HIGH, GPIO.LOW, GPIO.HIGH)
     GPIO.add_event_detect(btn_submit, GPIO.RISING, callback=callback1, bouncetime=200)
-
     GPIO.add_event_detect(btn_increase, GPIO.RISING, callback=callback2, bouncetime=200)
 
     # Setup debouncing and callbacks
