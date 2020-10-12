@@ -1,12 +1,15 @@
 # Import libraries
+from os import startfile
 import RPi.GPIO as GPIO
 import random
 import ES2EEPROMUtils
-import os
+import time
 
 # some global variables that need to change as we run the program
 end_of_game = None  # set if the user wins or ends the game
-cnt = 0 # improtant
+begin = 0
+end = 0
+buttonStatus = 0
 
 # DEFINE THE PINS USED HERE
 LED_value = [11, 13, 15]
@@ -15,7 +18,6 @@ btn_submit = 16
 btn_increase = 18
 buzzer = 33
 eeprom = ES2EEPROMUtils.ES2EEPROM()
-
 
 
 # Print the game banner
@@ -82,20 +84,19 @@ def display_scores(count, raw_data):
 
 
 def callback1(channel):
-    btn_guess_pressed(channel)
+    btn_guess_pressed()
     print("falling edge detected on btn_submit")
     pass
 
 
 def callback2(channel):
-    btn_increase_pressed(cnt)
+    btn_increase_pressed()
     print("falling edge detected on btn_increase")
     pass
 
 
 # Setup Pins
 def setup():
-    
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(LED_value[0], GPIO.OUT)
     GPIO.setup(LED_value[1], GPIO.OUT)
@@ -145,9 +146,10 @@ def save_scores():
 def generate_number():
     return random.randint(0, pow(2, 3)-1)
 
+
 # Increase button pressed
-def btn_increase_pressed(channel):
-    temp =count.get_value()
+def btn_increase_pressed():
+    temp = count.get_value()
     GPIO.output(LED_value[0], temp & 0x01)
     GPIO.output(LED_value[1], temp & 0x02)
     GPIO.output(LED_value[2], temp & 0x04)
@@ -158,7 +160,17 @@ def btn_increase_pressed(channel):
 
 
 # Guess button
-def btn_guess_pressed(channel):
+def btn_guess_pressed():
+    global begin
+    global end
+
+    if GPIO.input(btn_submit) == 0:  # pulled low
+        begin = time.time()
+    if GPIO.input(btn_submit) == 1:  # pulled high
+        end = time.time()
+        elapsed = end - begin
+        print(elapsed)
+
     # If they've pressed and held the button, clear up the GPIO and take them back to the menu screen
     # Compare the actual value with the user value displayed on the LEDs
     # Change the PWM LED
