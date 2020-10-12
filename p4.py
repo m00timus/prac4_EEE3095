@@ -79,8 +79,8 @@ def setup():
     GPIO.setup(LED_value[2], GPIO.OUT)
     GPIO.setup(LED_accuracy, GPIO.OUT)
     GPIO.setup(buzzer, GPIO.OUT)
-    GPIO.setup(btn_submit, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    GPIO.setup(btn_increase, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(btn_submit, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(btn_increase, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     GPIO.output(LED_value[0], GPIO.LOW)
     GPIO.output(LED_value[1], GPIO.LOW)
