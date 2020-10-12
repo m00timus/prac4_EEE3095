@@ -15,7 +15,7 @@ btn_increase = 18
 buzzer = 33
 eeprom = ES2EEPROMUtils.ES2EEPROM()
 
-cnt = 0
+#cnt = 0
 
 
 # Print the game banner
@@ -75,6 +75,7 @@ def callback2(channel):
 
 # Setup Pins
 def setup():
+    cnt = 0
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(LED_value[0], GPIO.OUT)
     GPIO.setup(LED_value[1], GPIO.OUT)
@@ -124,18 +125,12 @@ def save_scores():
 def generate_number():
     return random.randint(0, pow(2, 3)-1)
 
-
 # Increase button pressed
 def btn_increase_pressed(channel):
-    
-    try:
-	    while True:
-		    GPIO.output(LED_value[0], cnt & 0x01) # set bit 0
-		    GPIO.output(LED_value[1], cnt & 0x02) 
-		    GPIO.output(LED_value[2],  cnt & 0x04) # set bit 2
-		    cnt += 1 %  7				# increment counter up to 7, then reset to 0
-    except KeyboardInterrupt:
-	    GPIO.cleanup()
+	GPIO.output(LED_value[0], cnt & 0x01) # set bit 0
+	GPIO.output(LED_value[1], cnt & 0x02)
+    GPIO.output(LED_value[2], cnt & 0x04)# set bit 2
+	cnt += 1 %  7				# increment counter up to 7, then reset to 0
     # Increase the value shown on the LEDs
     # You can choose to have a global variable store the user's current guess, 
     # or just pull the value off the LEDs when a user makes a guess
