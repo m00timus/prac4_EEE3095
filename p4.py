@@ -62,12 +62,12 @@ def display_scores(count, raw_data):
     pass
 
 def callback1(channel):
-    GPIO.OUTPUT(LED_value, GPIO.HIGH)
+    GPIO.output(LED_value, GPIO.HIGH)
     print("rising edge detected on btn_submit")
     pass
 
 def callback2(channel):
-    GPIO.OUTPUT(LED_value, GPIO.HIGH)
+    GPIO.output(LED_value, GPIO.HIGH)
     print("rising edge detected on btn_increase")
     pass
 
