@@ -1,8 +1,8 @@
 # Import libraries
-from os import startfile
 import RPi.GPIO as GPIO
 import random
 import ES2EEPROMUtils
+import os
 import time
 
 # some global variables that need to change as we run the program
@@ -163,14 +163,12 @@ def btn_increase_pressed():
 def btn_guess_pressed():
     global begin
     global end
-
     if GPIO.input(btn_submit) == 0:  # pulled low
         begin = time.time()
     if GPIO.input(btn_submit) == 1:  # pulled high
         end = time.time()
-        elapsed = end - begin
-        print(elapsed)
-
+    elapsed = end - begin
+    print(elapsed)
     # If they've pressed and held the button, clear up the GPIO and take them back to the menu screen
     # Compare the actual value with the user value displayed on the LEDs
     # Change the PWM LED
