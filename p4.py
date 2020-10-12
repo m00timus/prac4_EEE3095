@@ -11,6 +11,7 @@ begin = 0
 end = 0
 buttonStatus = 0
 
+
 # DEFINE THE PINS USED HERE
 LED_value = [11, 13, 15]
 LED_accuracy = 32
@@ -147,6 +148,9 @@ def generate_number():
     return random.randint(0, pow(2, 3)-1)
 
 
+num = generate_number
+
+
 # Increase button pressed
 def btn_increase_pressed():
     temp = count.get_value()
@@ -163,11 +167,21 @@ def btn_increase_pressed():
 def btn_guess_pressed():
     global begin
     global end
+    global num
     if GPIO.input(btn_submit) == 0:  # pulled low
         begin = time.time()
     if GPIO.input(btn_submit) == 1:  # pulled high
         end = time.time()
     elapsed = end - begin
+    if elapsed > 0:
+        if elapsed > 2:
+            count.reset()
+            welcome()
+            while True:
+                menu()
+                pass
+        else:
+            GPIO.output(buzzer, GPIO.HIGH)     
     print(elapsed)
     # If they've pressed and held the button, clear up the GPIO and take them back to the menu screen
     # Compare the actual value with the user value displayed on the LEDs
