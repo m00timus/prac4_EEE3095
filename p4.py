@@ -125,7 +125,7 @@ def setup():
 def fetch_scores():
     # get however many scores there are
     score_count = None
-    scores = None
+    scores = []
     # Get the scores
     score_count = eeprom.read_byte(0)
     # temp = eeprom.read_block(1, score_count)  # reading n blocks counting from 1
@@ -140,7 +140,7 @@ def fetch_scores():
         # 3
         score = eeprom.read_byte((i+1)*4+3)
         scores[i] = [[a+b+c], [score]]
-    return scores
+    # return scores
     # print(temp)
     # scores = temp
     # return back the results
