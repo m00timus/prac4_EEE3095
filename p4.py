@@ -130,7 +130,7 @@ def fetch_scores():
     score_count = eeprom.read_byte(0)
     # temp = eeprom.read_block(1, score_count)  # reading n blocks counting from 1
     # convert the codes back to ascii 
-    for i in score_count:
+    for i in len(score_count):
         # 0
         a = chr(eeprom.read_byte((i+1)*4))
         # 1
