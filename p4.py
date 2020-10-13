@@ -153,7 +153,6 @@ def fetch_scores():
 # Save high scores
 def save_scores():
     # fetch scores
-    # wip
     posit = eeprom.read_byte(0) + 1
     # include new score
 
@@ -194,8 +193,10 @@ def btn_guess_pressed():
         end = time.time()
     elapsed = end - begin
     if elapsed > 0:
+        print(elapsed)
         if elapsed > 2:
             count.reset()
+            print("long press detected")
             welcome()
             menu()
         else:
