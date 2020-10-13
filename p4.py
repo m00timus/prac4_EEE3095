@@ -210,9 +210,10 @@ def btn_guess_pressed():
         guess = count.get_value()
         diff1 = guess - num
         diff1 = abs(diff1)
-        if diff == 0:
+        if diff1 == 0:
             GPIO.output(LED_value, GPIO.LOW)
             GPIO.output(LED_accuracy, GPIO.LOW)
+            GPIO.output(buzzer, GPIO.HIGH)
             print("YOU WIN")
         elif diff1 == 1:
             print("off by 1")
@@ -231,8 +232,6 @@ def btn_guess_pressed():
                 pass
         except Exception as e:
             print(e)
-        finally:
-            GPIO.cleanup()
     # If they've pressed and held the button, clear up the GPIO and take them back to the menu screen
     # Compare the actual value with the user value displayed on the LEDs
     # Change the PWM LED
