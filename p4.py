@@ -168,7 +168,7 @@ def generate_number():
     return random.randint(0, pow(2, 3)-1)
 
 
-num = generate_number
+num = generate_number()
 
 
 # Increase button pressed
