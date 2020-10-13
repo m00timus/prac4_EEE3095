@@ -129,18 +129,17 @@ def fetch_scores():
     # Get the scores
     score_count = eeprom.read_byte(0)
     # temp = eeprom.read_block(1, score_count)  # reading n blocks counting from 1
-    # convert the codes back to ascii
-    i = 1
+    # convert the codes back to ascii 
     for i in score_count:
         # 0
-        a = chr(eeprom.read_byte(i*4))
+        a = chr(eeprom.read_byte((i+1)*4))
         # 1
-        b = chr(eeprom.read_byte(i*4+1))
+        b = chr(eeprom.read_byte((i+1)*4+1))
         # 2
-        c = chr(eeprom.read_byte(i*4+2))
+        c = chr(eeprom.read_byte((i+1)*4+2))
         # 3
-        score = eeprom.read_byte(i*4+3)
-        scores[i-1] = [[a+b+c], [score]]
+        score = eeprom.read_byte((i+1)*4+3)
+        scores[i] = [[a+b+c], [score]]
     # print(temp)
     # scores = temp
     # return back the results
