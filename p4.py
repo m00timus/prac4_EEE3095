@@ -204,7 +204,7 @@ def btn_guess_pressed():
             GPIO.output(LED_value, GPIO.LOW)
             GPIO.output(LED_accuracy, GPIO.LOW)
             GPIO.output(buzzer, GPIO.LOW)
-            print("You Won in only " + guesses + " guesses!\n")
+            print("You Won in only " + str(guesses) + " guesses!\n")
             name = input("Enter your name: ")
             while len(name) != 3:
                 print("your name should be 3 letters long!\n")
