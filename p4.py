@@ -189,20 +189,26 @@ def btn_guess_pressed():
     global begin
     global end
     global num
-    global buttonStatus
-    start_time = time.time()
-
-    while GPIO.input(btn_submit) == 0: # Wait for the button up
-        pass
-
-    buttonTime = time.time() - start_time    # How long was the button down?
-    print(buttonTime)
-    if GPIO.input(btn_submit) == 0:  # pulled low
-        begin = time.time()
-    if GPIO.input(btn_submit) == 1:  # pulled high
-        end = time.time()
+    
+    #if GPIO.input(btn_submit) == 0:  # pulled low
+    #    begin = time.time()
+    #if GPIO.input(btn_submit) == 1:  # pulled high
+    #    end = time.time()
     elapsed = end - begin
-    print(elapsed)
+    # print(elapsed)
+
+    start_time = time.time()
+    diff = 0
+
+    while (GPIO.input(btn_submit) == 0) and (diff < 2) :
+        now_time = time.time()
+        diff =- start_time+now_time
+
+    if diff < 2 :
+        print("smol")
+    else:
+        print("long")
+
     if elapsed > 0:
         print(elapsed)
         if elapsed > 1.5:
@@ -220,16 +226,17 @@ def btn_guess_pressed():
         else:
             GPIO.output(LED_accuracy, GPIO.HIGH)
             guess = count.get_value()
-            diff = abs(guess - num)
+            diff1 = guess - num
+            diff1 = abs(diff1)
             if diff == 0:
                 GPIO.output(LED_value, GPIO.LOW)
                 GPIO.output(LED_accuracy, GPIO.LOW)
                 print("YOU WIN")
-            elif diff == 1:
+            elif diff1 == 1:
                 print("off by 1")
-            elif diff == 2:
+            elif diff1 == 2:
                 print("off by 2")
-            elif diff == 3:
+            elif diff1 == 3:
                 print("off by 3")
     # print(elapsed)
     # If they've pressed and held the button, clear up the GPIO and take them back to the menu screen
