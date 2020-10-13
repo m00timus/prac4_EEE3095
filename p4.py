@@ -126,7 +126,7 @@ def fetch_scores():
     score_count = None
     # Get the scores
     eeprom.populate_mock_scores()
-    temp = eeprom.read_block()
+    temp = eeprom.read_block(0,5)
     # convert the codes back to ascii
     print(temp)
     score_count = temp[0]
