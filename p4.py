@@ -147,16 +147,16 @@ def fetch_scores():
         temp_scores.append(score)
         
     # return scores
-    # for j in range(3):
-    #    scores += temp_scores[2*j] + " " + str(temp_scores[2*j+1]) + "\n"
+    for j in range(3):
+        scores += temp_scores[2*j] + " " + str(temp_scores[2*j+1]) + "\n"
     # return back the results
-    return score_count, temp_scores
+    return score_count, scores
 
 
 # Save high scores
 def save_scores():
     # fetch scores
-    fetch_scores(count, scores)
+    
     # include new score
 
     # sort
