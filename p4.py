@@ -126,7 +126,7 @@ def fetch_scores():
     # get however many scores there are
     score_count = None
     temp_scores = []
-    scores = 0
+    scores = None
     # Get the scores
     score_count = eeprom.read_byte(0)
     # temp = eeprom.read_block(1, score_count)  # reading n blocks counting from 1
