@@ -185,9 +185,18 @@ def btn_increase_pressed():
 
 # Guess button
 def btn_guess_pressed():
+    
     global begin
     global end
     global num
+    global buttonStatus
+    start_time = time.time()
+
+    while GPIO.input(btn_submit) == 0: # Wait for the button up
+        pass
+
+    buttonTime = time.time() - start_time    # How long was the button down?
+    print(buttonTime)
     if GPIO.input(btn_submit) == 0:  # pulled low
         begin = time.time()
     if GPIO.input(btn_submit) == 1:  # pulled high
@@ -199,6 +208,7 @@ def btn_guess_pressed():
         if elapsed > 1.5:
             count.reset() 
             try:
+                # reset LEDs and wat not here
                 welcome()
                 while True:
                     menu()
