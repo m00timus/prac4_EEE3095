@@ -126,13 +126,12 @@ def fetch_scores():
     # get however many scores there are
     score_count = None
     temp_scores = []
-    lowScore = 99
-    scores = None
+    scores = 0
     # Get the scores
     score_count = eeprom.read_byte(0)
     # temp = eeprom.read_block(1, score_count)  # reading n blocks counting from 1
     # convert the codes back to ascii 
-    for i in range(score_count):
+    for i in range(3):
         # 0
         a = chr(eeprom.read_byte((i+1)*4))
         # 1
@@ -141,10 +140,12 @@ def fetch_scores():
         c = chr(eeprom.read_byte((i+1)*4+2))
         # 3
         score = eeprom.read_byte((i+1)*4+3)
-    # return only 3 highest (lowest) scores
+        # temp_scores.append(a+b+c)
+        scores += a+b+c + " - " + score + "\n"
+        # temp_scores.append(score)
+        
     # return scores
-    for j in range(3):
-        scores += temp_scores[2*j] + " - " + temp_scores[2*j+1] + "\n"
+    
     # return back the results
     return score_count, scores
 
@@ -152,9 +153,9 @@ def fetch_scores():
 # Save high scores
 def save_scores():
     # fetch scores
-    posit = eeprom.read_byte(0)
+    posit = eeprom.read_byte(0) + 1
     # include new score
-
+    
     # sort
     # update total amount of scores
     # write new scores
