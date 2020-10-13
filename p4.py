@@ -143,8 +143,8 @@ def fetch_scores():
         score = eeprom.read_byte((i+1)*4+3)
     # return only 3 highest (lowest) scores
     # return scores
-    for i in range(3):
-        scores += temp_scores[2*i] + " - " + temp_scores[2*i+1] + "\n"
+    for j in range(3):
+        scores += temp_scores[2*j] + " - " + temp_scores[2*j+1] + "\n"
     # return back the results
     return score_count, scores
 
