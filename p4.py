@@ -196,10 +196,18 @@ def btn_guess_pressed():
         print(elapsed)
         if elapsed > 1.5:
             count.reset()
-            welcome()
-            menu()
+            try:
+                # Call setup function
+                welcome()
+                while True:
+                    menu()
+                    pass
+            except Exception as e:
+                print(e)
+            finally:
+                GPIO.cleanup()
         else:
-            GPIO.output(LED_accuracy, GPIO.HIGH)    
+            GPIO.output(LED_accuracy, GPIO.HIGH)
     # print(elapsed)
     # If they've pressed and held the button, clear up the GPIO and take them back to the menu screen
     # Compare the actual value with the user value displayed on the LEDs
