@@ -209,7 +209,8 @@ def btn_guess_pressed():
                 GPIO.cleanup()
         else:
             GPIO.output(LED_accuracy, GPIO.HIGH)
-            diff = abs(count.get_value() - num)
+            guess = count.get_value()
+            diff = abs(guess - num)
             if diff == 0:
                 GPIO.output(LED_value, GPIO.LOW)
                 GPIO.output(LED_accuracy, GPIO.LOW)
