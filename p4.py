@@ -11,6 +11,7 @@ end_of_game = None  # set if the user wins or ends the game
 begin = 0
 end = 0
 buttonStatus = 0
+guesses = 0
 
 
 # DEFINE THE PINS USED HERE
@@ -146,16 +147,16 @@ def fetch_scores():
         temp_scores.append(score)
         
     # return scores
-    for j in range(3):
-        scores += temp_scores[2*j] + " " + str(temp_scores[2*j+1]) + "\n"
+    # for j in range(3):
+    #    scores += temp_scores[2*j] + " " + str(temp_scores[2*j+1]) + "\n"
     # return back the results
-    return score_count, scores
+    return score_count, temp_scores
 
 
 # Save high scores
 def save_scores():
     # fetch scores
-    posit = eeprom.read_byte(0) + 1
+    fetch_scores(count, scores)
     # include new score
 
     # sort
@@ -186,37 +187,29 @@ def btn_increase_pressed():
 
 # Guess button
 def btn_guess_pressed():
-    
-    global begin
-    global end
     global num
-    
-    #if GPIO.input(btn_submit) == 0:  # pulled low
-    #    begin = time.time()
-    #if GPIO.input(btn_submit) == 1:  # pulled high
-    #    end = time.time()
-    elapsed = end - begin
-    # print(elapsed)
-
+    global guesses
     start_time = time.time()
     diff = 0
-
-    while (GPIO.input(btn_submit) == 0) and (diff < 2) :
+    while (GPIO.input(btn_submit) == 0) and (diff < 2):
         now_time = time.time()
-        diff =- start_time+now_time
-
-    if diff < 2 :
-        print("smol")
-        # GPIO.output(LED_accuracy, GPIO.HIGH)
+        diff = - start_time+now_time
+    if diff < 2:
+        guesses += 1
         guess = count.get_value()
+        # Compare the actual value with the user value displayed on the LEDs
         diff1 = guess - num
         diff1 = abs(diff1)
         if diff1 == 0:
             GPIO.output(LED_value, GPIO.LOW)
             GPIO.output(LED_accuracy, GPIO.LOW)
-            GPIO.output(buzzer, GPIO.HIGH)
-            print("YOU WIN")
-
+            GPIO.output(buzzer, GPIO.LOW)
+            print("You Won in only " + guesses + " guesses!\n")
+            name = input("Enter your name: ")
+            while len(name) != 3:
+                print("your name should be 3 letters long!\n")
+                name = input("Try again!")
+            save_scores()
         elif diff1 == 1:
             print("off by 1")
         elif diff1 == 2:
@@ -224,19 +217,10 @@ def btn_guess_pressed():
         elif diff1 == 3:
             print("off by 3")
     else:
-        print("long")
+        # If they've pressed and held the button, clear up the GPIO and take them back to the menu screen
         os.execl(sys.executable, sys.executable, * sys.argv)
-        try:
-            # reset LEDs and wat not here
-            setup()
-            welcome()
-            while True:
-                menu()
-                pass
-        except Exception as e:
-            print(e)
-    # If they've pressed and held the button, clear up the GPIO and take them back to the menu screen
-    # Compare the actual value with the user value displayed on the LEDs
+
+    
     # Change the PWM LED
     # if it's close enough, adjust the buzzer
     # if it's an exact guess:
