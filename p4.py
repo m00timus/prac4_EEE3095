@@ -145,7 +145,7 @@ def fetch_scores():
         
     # return scores
     for j in range(3):
-        scores += temp_scores[2*j] + " " + str(temp_scores[2*j+1])
+        scores += temp_scores[2*j] + " " + str(temp_scores[2*j+1]) + "\n"
     # return back the results
     return score_count, scores
 
@@ -153,6 +153,7 @@ def fetch_scores():
 # Save high scores
 def save_scores():
     # fetch scores
+    # wip
     posit = eeprom.read_byte(0) + 1
     # include new score
 
@@ -195,19 +196,10 @@ def btn_guess_pressed():
     if elapsed > 0:
         if elapsed > 2:
             count.reset()
-            try:
-                # Call setup function
-                setup()
-                welcome()
-                while True:
-                    menu()
-                    pass
-            except Exception as e:
-                print(e)
-            finally:
-                GPIO.cleanup()
+            welcome()
+            menu()
         else:
-            GPIO.output(buzzer, GPIO.HIGH)     
+            GPIO.output(LED_accuracy, GPIO.HIGH)     
     print(elapsed)
     # If they've pressed and held the button, clear up the GPIO and take them back to the menu screen
     # Compare the actual value with the user value displayed on the LEDs
