@@ -141,7 +141,7 @@ def fetch_scores():
         # 3
         score = eeprom.read_byte((i+1)*4+3)
         # temp_scores.append(a+b+c)
-        scores += a+b+c + " - " + score + "\n"
+        scores += a+b+c + " - " + str(score) + "\n"
         # temp_scores.append(score)
         
     # return scores
@@ -155,7 +155,7 @@ def save_scores():
     # fetch scores
     posit = eeprom.read_byte(0) + 1
     # include new score
-    
+
     # sort
     # update total amount of scores
     # write new scores
