@@ -145,7 +145,7 @@ def fetch_scores():
         
     # return scores
     for j in range(3):
-        scores += temp_scores[2*j] + " " + temp_scores[2*j+1]
+        scores += temp_scores[2*j] + " " + str(temp_scores[2*j+1])
     # return back the results
     return score_count, scores
 
