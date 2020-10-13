@@ -125,7 +125,9 @@ def setup():
 def fetch_scores():
     # get however many scores there are
     score_count = None
-    scores = []
+    temp_scores = []
+    lowScore = 99
+    scores = None
     # Get the scores
     score_count = eeprom.read_byte(0)
     # temp = eeprom.read_block(1, score_count)  # reading n blocks counting from 1
@@ -139,11 +141,10 @@ def fetch_scores():
         c = chr(eeprom.read_byte((i+1)*4+2))
         # 3
         score = eeprom.read_byte((i+1)*4+3)
-        scores.append(a+b+c)
-        scores.append(score)
+    # return only 3 highest (lowest) scores
     # return scores
-    # print(temp)
-    # scores = temp
+    for i in range(3):
+        scores += temp_scores[2*i] + " - " + temp_scores[2*i+1] + "\n"
     # return back the results
     return score_count, scores
 
