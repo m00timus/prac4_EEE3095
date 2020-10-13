@@ -203,7 +203,7 @@ def btn_guess_pressed():
         if diff1 == 0:
             GPIO.output(LED_value, GPIO.LOW)
             GPIO.output(LED_accuracy, GPIO.LOW)
-            GPIO.output(buzzer, GPIO.LOW)
+            GPIO.output(buzzer, GPIO.HIGH)
             print("You Won in only " + str(guesses) + " guesses!\n")
             name = input("Enter your name: ")
             while len(name) != 3:
