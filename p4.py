@@ -4,6 +4,7 @@ import random
 import ES2EEPROMUtils
 import os
 import time
+import sys
 
 # some global variables that need to change as we run the program
 end_of_game = None  # set if the user wins or ends the game
@@ -215,6 +216,7 @@ def btn_guess_pressed():
             GPIO.output(LED_accuracy, GPIO.LOW)
             GPIO.output(buzzer, GPIO.HIGH)
             print("YOU WIN")
+
         elif diff1 == 1:
             print("off by 1")
         elif diff1 == 2:
@@ -223,6 +225,7 @@ def btn_guess_pressed():
             print("off by 3")
     else:
         print("long")
+        os.execl(sys.executable, sys.executable, * sys.argv)
         try:
             # reset LEDs and wat not here
             setup()
