@@ -1,5 +1,4 @@
 # Import libraries
-from Semester2.prac4_EEE3095.ES2EEPROMUtils import ES2EEPROM
 import RPi.GPIO as GPIO
 import random
 import ES2EEPROMUtils
@@ -126,7 +125,8 @@ def fetch_scores():
     # get however many scores there are
     score_count = None
     # Get the scores
-    temp = ES2EEPROM.read_block()
+    ES2EEPROMUtils.populate_mock_scores()
+    temp = ES2EEPROMUtils.read_block()
     # convert the codes back to ascii
     print(temp)
     score_count = temp[0]
