@@ -111,6 +111,7 @@ def setup():
     GPIO.output(LED_value[0], GPIO.LOW)
     GPIO.output(LED_value[1], GPIO.LOW)
     GPIO.output(LED_value[2], GPIO.LOW)
+    GPIO.output(buzzer, GPIO.LOW)
 
     pi_pwm = GPIO.PWM(LED_accuracy, 1000)
     pi_pwm2 = GPIO.PWM(buzzer, 1000)
@@ -196,8 +197,9 @@ def btn_guess_pressed():
         print(elapsed)
         if elapsed > 1.5:
             count.reset()
+            
             try:
-                # Call setup function
+                setup()
                 welcome()
                 while True:
                     menu()
@@ -208,6 +210,17 @@ def btn_guess_pressed():
                 GPIO.cleanup()
         else:
             GPIO.output(LED_accuracy, GPIO.HIGH)
+            diff = count.get_value - num
+            if diff == 0:
+                GPIO.output(LED_value, GPIO.LOW)
+                GPIO.output(LED_accuracy, GPIO.LOW)
+                print("YOU WIN")
+            elif diff == 1:
+                print("off by 1")
+            elif diff == 2:
+                print("off by 2")
+            elif diff == 3:
+                print("off by 3")
     # print(elapsed)
     # If they've pressed and held the button, clear up the GPIO and take them back to the menu screen
     # Compare the actual value with the user value displayed on the LEDs
