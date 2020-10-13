@@ -125,8 +125,8 @@ def fetch_scores():
     # get however many scores there are
     score_count = None
     # Get the scores
-    ES2EEPROMUtils.populate_mock_scores()
-    temp = ES2EEPROMUtils.read_block()
+    eeprom.populate_mock_scores()
+    temp = eeprom.read_block()
     # convert the codes back to ascii
     print(temp)
     score_count = temp[0]
