@@ -81,6 +81,7 @@ def display_scores(count, raw_data):
     # print the scores to the screen in the expected format
     print("There are {} scores. Here are the top 3!".format(count))
     # print out the scores in the required format
+    print(raw_data)
     pass
 
 
@@ -113,8 +114,8 @@ def setup():
 
     pi_pwm = GPIO.PWM(LED_accuracy, 1000)
     pi_pwm2 = GPIO.PWM(buzzer, 1000)
-    GPIO.add_event_detect(btn_submit, GPIO.FALLING, callback=callback1, bouncetime=200)
-    GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=callback2, bouncetime=200)
+    GPIO.add_event_detect(btn_submit, GPIO.FALLING, callback=callback1, bouncetime=300)
+    GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=callback2, bouncetime=300)
 
     # Setup debouncing and callbacks
     pass
@@ -124,13 +125,24 @@ def setup():
 def fetch_scores():
     # get however many scores there are
     score_count = None
+    scores = None
     # Get the scores
-    eeprom.populate_mock_scores()
-    temp = eeprom.read_block(0,5)
+    score_count = eeprom.read_byte(0)
+    # temp = eeprom.read_block(1, score_count)  # reading n blocks counting from 1
     # convert the codes back to ascii
-    print(temp)
-    score_count = temp[0]
-    scores = temp[7]
+    i = 1
+    for i in score_count:
+        # 0
+        a = chr(eeprom.read_byte(i*4))
+        # 1
+        b = chr(eeprom.read_byte(i*4+1))
+        # 2
+        c = chr(eeprom.read_byte(i*4+2))
+        # 3
+        score = eeprom.read_byte(i*4+3)
+        scores[i-1] = [[a+b+c], [score]]
+    # print(temp)
+    # scores = temp
     # return back the results
     return score_count, scores
 
@@ -138,7 +150,9 @@ def fetch_scores():
 # Save high scores
 def save_scores():
     # fetch scores
+    posit = eeprom.read_byte(0)
     # include new score
+
     # sort
     # update total amount of scores
     # write new scores
