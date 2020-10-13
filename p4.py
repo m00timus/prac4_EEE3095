@@ -115,7 +115,7 @@ def setup():
 
     pi_pwm = GPIO.PWM(LED_accuracy, 1000)
     pi_pwm2 = GPIO.PWM(buzzer, 1000)
-    GPIO.add_event_detect(btn_submit, GPIO.FALLING, callback=callback1, bouncetime=500)
+    GPIO.add_event_detect(btn_submit, GPIO.BOTH, callback=callback1, bouncetime=500)
     GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=callback2, bouncetime=500)
 
     # Setup debouncing and callbacks
@@ -193,13 +193,12 @@ def btn_guess_pressed():
     if GPIO.input(btn_submit) == 1:  # pulled high
         end = time.time()
     elapsed = end - begin
+    print(elapsed)
     if elapsed > 0:
         print(elapsed)
         if elapsed > 1.5:
-            count.reset()
-            
+            count.reset() 
             try:
-                setup()
                 welcome()
                 while True:
                     menu()
