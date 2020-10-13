@@ -176,10 +176,17 @@ def btn_guess_pressed():
     if elapsed > 0:
         if elapsed > 2:
             count.reset()
-            welcome()
-            while True:
-                menu()
-                pass
+            try:
+                # Call setup function
+                setup()
+                welcome()
+                while True:
+                    menu()
+                    pass
+            except Exception as e:
+                print(e)
+            finally:
+                GPIO.cleanup()
         else:
             GPIO.output(buzzer, GPIO.HIGH)     
     print(elapsed)
