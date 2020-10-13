@@ -139,7 +139,8 @@ def fetch_scores():
         c = chr(eeprom.read_byte((i+1)*4+2))
         # 3
         score = eeprom.read_byte((i+1)*4+3)
-        scores[i] = [[a+b+c], [score]]
+        scores.append(a+b+c)
+        scores.append(score)
     # return scores
     # print(temp)
     # scores = temp
