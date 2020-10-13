@@ -206,39 +206,33 @@ def btn_guess_pressed():
 
     if diff < 2 :
         print("smol")
+        # GPIO.output(LED_accuracy, GPIO.HIGH)
+        guess = count.get_value()
+        diff1 = guess - num
+        diff1 = abs(diff1)
+        if diff == 0:
+            GPIO.output(LED_value, GPIO.LOW)
+            GPIO.output(LED_accuracy, GPIO.LOW)
+            print("YOU WIN")
+        elif diff1 == 1:
+            print("off by 1")
+        elif diff1 == 2:
+            print("off by 2")
+        elif diff1 == 3:
+            print("off by 3")
     else:
         print("long")
-
-    if elapsed > 0:
-        print(elapsed)
-        if elapsed > 1.5:
-            count.reset() 
-            try:
-                # reset LEDs and wat not here
-                welcome()
-                while True:
-                    menu()
-                    pass
-            except Exception as e:
-                print(e)
-            finally:
-                GPIO.cleanup()
-        else:
-            GPIO.output(LED_accuracy, GPIO.HIGH)
-            guess = count.get_value()
-            diff1 = guess - num
-            diff1 = abs(diff1)
-            if diff == 0:
-                GPIO.output(LED_value, GPIO.LOW)
-                GPIO.output(LED_accuracy, GPIO.LOW)
-                print("YOU WIN")
-            elif diff1 == 1:
-                print("off by 1")
-            elif diff1 == 2:
-                print("off by 2")
-            elif diff1 == 3:
-                print("off by 3")
-    # print(elapsed)
+        try:
+            # reset LEDs and wat not here
+            setup()
+            welcome()
+            while True:
+                menu()
+                pass
+        except Exception as e:
+            print(e)
+        finally:
+            GPIO.cleanup()
     # If they've pressed and held the button, clear up the GPIO and take them back to the menu screen
     # Compare the actual value with the user value displayed on the LEDs
     # Change the PWM LED
