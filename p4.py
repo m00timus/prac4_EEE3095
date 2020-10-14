@@ -151,11 +151,13 @@ def fetch_scores():
 
     temp = eeprom.read_block(1, 4)
     print(temp)  # [76, 83, 117, 4]
-    save_scores("ABA", 3)
+    # save_scores("ABA", 3)
     return score_count, scores
 
-def split(word): 
+
+def split(word):
     return [char for char in word]  
+
 
 # Save high scores
 def save_scores(name, guess):
@@ -179,13 +181,13 @@ def save_scores(name, guess):
     temp = split(name)
     blocks.append([ord(temp[0]), ord(temp[1]), ord(temp[2]), guess])
     # sort
-    for i in range(len(blocks)):
-        if guess < blocks[i][3]:
-            blocks.sort(key=guess)
-        else:
-            blocks.sort(key=blocks[1][3])
+    # for i in range(len(blocks)):
+    #    if guess < blocks[i][3]:
+    #        blocks.sort(key=guess)
+    #    else:
+    #        blocks.sort(key=blocks[1][3])
 
-    print(blocks)
+    # print(blocks)
     # update total amount of scores
     # write new scores
     pass
