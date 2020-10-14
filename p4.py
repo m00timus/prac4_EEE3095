@@ -154,6 +154,8 @@ def fetch_scores():
     save_scores("ABA", 3)
     return score_count, scores
 
+def split(word): 
+    return [char for char in word]  
 
 # Save high scores
 def save_scores(name, guess):
@@ -172,10 +174,18 @@ def save_scores(name, guess):
         # 3
         blocks.append(eeprom.read_block(i, 4))
         score = eeprom.read_byte((i+1)*4+3)
-        print(blocks[i])
+        # print(blocks[i])
     # include new score
-    # blocks.append()
+    temp = split(name)
+    blocks.append([ord(temp[0]), ord(temp[1]), ord(temp[2]), guess])
     # sort
+    for i in range(len(blocks)):
+        if guess < blocks[i][3]:
+            blocks.sort(key=guess)
+        else:
+            blocks.sort(key=blocks[1][3])
+
+    print(blocks)
     # update total amount of scores
     # write new scores
     pass
@@ -226,7 +236,7 @@ def btn_guess_pressed():
             while len(name) != 3:
                 print("your name should be 3 letters long!\n")
                 name = input("Try again!")
-            save_scores(name, sguess)
+            save_scores(name, guess)
         elif diff1 == 1:
             print("off by 1")
         elif diff1 == 2:
