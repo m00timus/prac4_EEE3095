@@ -171,7 +171,7 @@ def save_scores():
         # 2
         c = chr(eeprom.read_byte((i+1)*4+2))
         # 3
-        blocks[i] = eeprom.read_block(i, 4)
+        blocks.append(eeprom.read_block(i, 4))
         score = eeprom.read_byte((i+1)*4+3)
         print(blocks[i])
     # include new score
