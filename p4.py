@@ -151,7 +151,7 @@ def fetch_scores():
 
     temp = eeprom.read_block(1, 4)
     print(temp)  # [76, 83, 117, 4]
-    save_scores()
+    save_scores("ABA", 3)
     return score_count, scores
 
 
