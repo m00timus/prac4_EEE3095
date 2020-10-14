@@ -119,8 +119,6 @@ def setup():
     pi_pwm2 = GPIO.PWM(buzzer, 1000)
     GPIO.add_event_detect(btn_submit, GPIO.BOTH, callback=callback1, bouncetime=500)
     GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=callback2, bouncetime=500)
-    temp = eeprom.read_block(1, 4)
-    print(temp)
     # Setup debouncing and callbacks
     pass
 
@@ -150,6 +148,10 @@ def fetch_scores():
     for j in range(3):
         scores += temp_scores[2*j] + " " + str(temp_scores[2*j+1]) + "\n"
     # return back the results
+
+    temp = eeprom.read_block(1, [4])
+    print(temp)
+
     return score_count, scores
 
 
