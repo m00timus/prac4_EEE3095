@@ -120,6 +120,7 @@ def setup():
     GPIO.add_event_detect(btn_submit, GPIO.BOTH, callback=callback1, bouncetime=500)
     GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=callback2, bouncetime=500)
     # Setup debouncing and callbacks
+    save_scores()
     pass
 
 
@@ -150,7 +151,7 @@ def fetch_scores():
     # return back the results
 
     temp = eeprom.read_block(1, 4)
-    print(temp)
+    print(temp)  # [76, 83, 117, 4]
 
     return score_count, scores
 
@@ -159,7 +160,7 @@ def fetch_scores():
 def save_scores():
     # fetch scores
     score_count = None
-    temp_scores = []
+    blocks = []
     scores = ""
     score_count = eeprom.read_byte(0)
     for i in range(score_count):
@@ -170,8 +171,9 @@ def save_scores():
         # 2
         c = chr(eeprom.read_byte((i+1)*4+2))
         # 3
-        score = eeprom.read_byte((i+1)*4+3) 
-        print(score) 
+        blocks[i] = eeprom.read_block(i, 4)
+        score = eeprom.read_byte((i+1)*4+3)
+        print(blocks[i])
     # include new score
     
     # sort
