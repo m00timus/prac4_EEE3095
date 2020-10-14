@@ -83,7 +83,7 @@ def display_scores(count, raw_data):
     # print the scores to the screen in the expected format
     print("There are {} scores. Here are the top 3!".format(count))
     # print out the scores in the required format
-    print(raw_data)
+    
     pass
 
 
@@ -94,7 +94,9 @@ def callback1(channel):
 
 
 def callback2(channel):
-    btn_increase_pressed()
+    #btn_increase_pressed()
+    eeprom.populate_mock_scores()
+    save_scores("max", 4)
     print("falling edge detected on btn_increase")
     pass
 
@@ -126,70 +128,59 @@ def setup():
 # Load high scores
 def fetch_scores():
     # get however many scores there are
-    score_count = None
-    temp_scores = []
-    scores = ""
+    
+    score_count = eeprom.read_byte(0)                         #Read 1st register to find num scores
+    print("amount of scores is: {}" .format(score_count))
+    
     # Get the scores
-    score_count = eeprom.read_byte(0)
-    # temp = eeprom.read_block(1, score_count)  # reading n blocks counting from 1
-    # convert the codes back to ascii 
-    for i in range(3):
-        # 0
-        a = chr(eeprom.read_byte((i+1)*4))
-        # 1
-        b = chr(eeprom.read_byte((i+1)*4+1))
-        # 2
-        c = chr(eeprom.read_byte((i+1)*4+2))
-        # 3
-        score = eeprom.read_byte((i+1)*4+3)
-        temp_scores.append(a+b+c)
-        temp_scores.append(score)  
-    # return scores
-    for j in range(3):
-        scores += temp_scores[2*j] + " " + str(temp_scores[2*j+1]) + "\n"
+    scores_raw = []
+    scores_raw = eeprom.read_block(1,score_count*4)
+    # convert the codes back to ascii
+    i = 0
+    j = 0
+    k = 0
+    temp = ""
+    rows, cols = (score_count, 2) 
+    scores = [[0 for i in range(cols)] for j in range(rows)]
+    while (i < len(scores_raw)):
+        if (j == 3):
+            scores[k][0] = temp
+            scores[k][1] = scores_raw[i]
+            k = k + 1
+            i = i + 1
+            j = 0
+            temp = ""
+            continue
+        temp = temp + chr(scores_raw[i])
+        i = i + 1
+        j = j + 1
+    print(scores)
     # return back the results
-
-    temp = eeprom.read_block(1, 4)
-    print(temp)  # [76, 83, 117, 4]
-    save_scores("ABA", 3)
     return score_count, scores
 
-def split(word): 
-    return [char for char in word]  
 
 # Save high scores
 def save_scores(name, guess):
-    # fetch scores
-    score_count = None
-    blocks = []
-    scores = ""
-    score_count = eeprom.read_byte(0)
-    for i in range(score_count):
-        # 0
-        a = chr(eeprom.read_byte((i+1)*4))
-        # 1
-        b = chr(eeprom.read_byte((i+1)*4+1))
-        # 2
-        c = chr(eeprom.read_byte((i+1)*4+2))
-        # 3
-        blocks.append(eeprom.read_block(i, 4))
-        score = eeprom.read_byte((i+1)*4+3)
-        # print(blocks[i])
+    score_count, scores = fetch_scores()
     # include new score
-    temp = split(name)
-    blocks.append([ord(temp[0]), ord(temp[1]), ord(temp[2]), guess])
+    scores.append([name, guess])
     # sort
-    for i in range(len(blocks)):
-        if guess < blocks[i][3]:
-            blocks.sort(key=guess)
-        else:
-            blocks.sort(key=blocks[1][3])
-
-    print(blocks)
+    scores.sort(key=sort_list)
+    print(scores)
+    score_write = []
+    for x in scores:
+        for y in x:
+            score_write.append(y)
+    print(score_write)
     # update total amount of scores
+    score_count = score_count + 1
     # write new scores
+    #eeprom.write_byte(0,score_count)            #Update total scores in reg 0 in EEEPROM
+    #eeprom.write_block(1, score_write)
     pass
 
+def sort_list(elem):
+    return elem[1]
 
 # Generate guess number
 def generate_number():
@@ -219,7 +210,7 @@ def btn_guess_pressed():
     diff = 0
     while (GPIO.input(btn_submit) == 0) and (diff < 2):
         now_time = time.time()
-        diff = - start_time+now_time
+        diff = - start_time + now_time
     if diff < 2:
         guesses += 1
         guess = count.get_value()
@@ -236,6 +227,7 @@ def btn_guess_pressed():
             while len(name) != 3:
                 print("your name should be 3 letters long!\n")
                 name = input("Try again!")
+            print("name: {} geusses: {} " .format(name, guess))          
             save_scores(name, guess)
         elif diff1 == 1:
             print("off by 1")
