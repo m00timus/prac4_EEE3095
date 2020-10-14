@@ -149,7 +149,7 @@ def fetch_scores():
         scores += temp_scores[2*j] + " " + str(temp_scores[2*j+1]) + "\n"
     # return back the results
 
-    temp = eeprom.read_block(1, [4])
+    temp = eeprom.read_block(1, 4)
     print(temp)
 
     return score_count, scores
