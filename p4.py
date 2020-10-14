@@ -120,7 +120,6 @@ def setup():
     GPIO.add_event_detect(btn_submit, GPIO.BOTH, callback=callback1, bouncetime=500)
     GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=callback2, bouncetime=500)
     # Setup debouncing and callbacks
-    save_scores()
     pass
 
 
@@ -152,12 +151,12 @@ def fetch_scores():
 
     temp = eeprom.read_block(1, 4)
     print(temp)  # [76, 83, 117, 4]
-
+    save_scores()
     return score_count, scores
 
 
 # Save high scores
-def save_scores():
+def save_scores(name, guess):
     # fetch scores
     score_count = None
     blocks = []
@@ -175,7 +174,7 @@ def save_scores():
         score = eeprom.read_byte((i+1)*4+3)
         print(blocks[i])
     # include new score
-    
+    # blocks.append()
     # sort
     # update total amount of scores
     # write new scores
@@ -221,12 +220,13 @@ def btn_guess_pressed():
             GPIO.output(LED_value, GPIO.LOW)
             GPIO.output(LED_accuracy, GPIO.LOW)
             GPIO.output(buzzer, GPIO.HIGH)
-            print("You Won in only " + str(guesses) + " guesses!\n")
+            sguess = str(guesses)
+            print("You Won in only " + sguess + " guesses!\n")
             name = input("Enter your name: ")
             while len(name) != 3:
                 print("your name should be 3 letters long!\n")
                 name = input("Try again!")
-            save_scores()
+            save_scores(name, sguess)
         elif diff1 == 1:
             print("off by 1")
         elif diff1 == 2:
