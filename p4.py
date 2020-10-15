@@ -83,7 +83,17 @@ def display_scores(count, raw_data):
     # print the scores to the screen in the expected format
     print("There are {} scores. Here are the top 3!".format(count))
     # print out the scores in the required format
-    
+    scores = raw_data
+    if (count == 0):
+        print("sadly there are non :(")
+    else:
+        scores.sort(key=sort_list)                    #sort list
+        i = 0
+        for entry in scores:
+            if (i == 3):
+                break
+            print("{} - {} took {} guesses".format((i + 1),entry[0],entry[1]))
+            i += 1
     pass
 
 
@@ -94,9 +104,7 @@ def callback1(channel):
 
 
 def callback2(channel):
-    #btn_increase_pressed()
-    eeprom.populate_mock_scores()
-    save_scores("max", 4)
+    btn_increase_pressed()
     print("falling edge detected on btn_increase")
     pass
 
@@ -116,6 +124,7 @@ def setup():
     GPIO.output(LED_value[1], GPIO.LOW)
     GPIO.output(LED_value[2], GPIO.LOW)
     GPIO.output(buzzer, GPIO.LOW)
+    eeprom.populate_mock_scores()
 
     pi_pwm = GPIO.PWM(LED_accuracy, 1000)
     pi_pwm2 = GPIO.PWM(buzzer, 1000)
@@ -134,52 +143,54 @@ def fetch_scores():
     
     # Get the scores
     scores_raw = []
-    scores_raw = eeprom.read_block(1,score_count*4)
+    scores_raw = eeprom.read_block(1,score_count*4)         #get amount of scores
     # convert the codes back to ascii
     i = 0
     j = 0
     k = 0
-    temp = ""
-    rows, cols = (score_count, 2) 
+    temp = ""                                               #initiate variables to use in loops
+    rows, cols = (score_count, 2)                           #Create empty scores 2D list 
     scores = [[0 for i in range(cols)] for j in range(rows)]
-    while (i < len(scores_raw)):
-        if (j == 3):
+    while (i < len(scores_raw)):                            #populate scores with 1st 3 char = name, 3th = score
+        if (j == 3):                                        #once name has 3 letters add it to list
             scores[k][0] = temp
-            scores[k][1] = scores_raw[i]
+            scores[k][1] = scores_raw[i]                    #add next item in scores which will be num of guesses
             k = k + 1
             i = i + 1
             j = 0
             temp = ""
             continue
-        temp = temp + chr(scores_raw[i])
-        i = i + 1
-        j = j + 1
-    print(scores)
+        temp = temp + chr(scores_raw[i])                    #add charachters to temp until its full
+        i += 1
+        j += 1
     # return back the results
-    return score_count, scores
+    return score_count, scores                              #returns num of scores in score_count. return 2D list scores with name and score
 
 
 # Save high scores
 def save_scores(name, guess):
-    score_count, scores = fetch_scores()
-    # include new score
-    scores.append([name, guess])
-    # sort
-    scores.sort(key=sort_list)
-    print(scores)
+    score_count, scores = fetch_scores()           
+    scores.append([name, guess])                   #include new score
+    scores.sort(key=sort_list)                     #sort list
     score_write = []
-    for x in scores:
-        for y in x:
-            score_write.append(y)
+    for name_entry in scores:                      #turn 2D scores into 1D raw data list to be sent to eeprom
+        i = 0
+        for x in name_entry:
+            if (i == 0):
+                j = 0
+                while (j < 3):
+                    score_write.append(ord(x[j]))   #transform name to ASCII value and add to score_write
+                    j += 1
+            else:
+                score_write.append(x)
+            i += 1
     print(score_write)
-    # update total amount of scores
-    score_count = score_count + 1
-    # write new scores
-    #eeprom.write_byte(0,score_count)            #Update total scores in reg 0 in EEEPROM
-    #eeprom.write_block(1, score_write)
+    score_count = score_count + 1               #increment amount of scores
+    eeprom.write_byte(0,score_count)            #Update total scores in reg 0 in EEEPROM
+    eeprom.write_block(1, score_write)          #write all scores to eeprom
     pass
 
-def sort_list(elem):
+def sort_list(elem):        #used when sorting lists
     return elem[1]
 
 # Generate guess number
