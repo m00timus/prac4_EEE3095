@@ -243,7 +243,7 @@ def btn_guess_pressed():
                 print("your name should be 3 letters long!\n")
                 name = input("Try again!")          
             save_scores(name, guess)
-            menu()
+            os.execl(sys.executable, sys.executable, * sys.argv)
         elif diff1 == 1:
             print("off by 1")
         elif diff1 == 2:
