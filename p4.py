@@ -140,7 +140,7 @@ def setup():
 def fetch_scores():
     # get however many scores there are
     
-    score_count = eeprom.read_byte(0)                         #Read 1st register to find num scores
+    score_count = eeprom.read_byte(0)                       #Read 1st register to find num scores
     print("amount of scores is: {}" .format(score_count))
     
     # Get the scores
@@ -230,7 +230,7 @@ def btn_guess_pressed():
         # Compare the actual value with the user value displayed on the LEDs
         diff1 = guess - num
         diff1 = abs(diff1)
-        accuracy_leds(diff1)
+        accuracy_leds(num, guess)
         trigger_buzzer(diff1)
         if diff1 == 0:
             GPIO.output(LED_value, GPIO.LOW)
@@ -268,9 +268,12 @@ def btn_guess_pressed():
 
 
 # LED Brightness
-def accuracy_leds(off):
-    # temp = 
-    # LED_pwm.ChangeDutyCycle(temp)
+def accuracy_leds(answer, guess):
+    if answer >= guess:
+        temp = guess/answer*100
+    else:
+        temp = ((8-guess)/(8-answer))*100
+    LED_pwm.ChangeDutyCycle(temp)
     # Set the brightness of the LED based on how close the guess is to the answer
     # - The % brightness should be directly proportional to the % "closeness"
     # - For example if the answer is 6 and a user guesses 4, the brightness should be at 4/6*100 = 66%
@@ -283,6 +286,7 @@ def trigger_buzzer(off):  # triggers being given a value by how far off it is
         GPIO.output(buzzer, GPIO.LOW)
     elif off == 1:
         buzzer_pwm.ChangeFrequency(4)
+        print("change freq to 4hz")
     elif off == 2:
         buzzer_pwm.ChangeFrequency(2)
     elif off == 3:
