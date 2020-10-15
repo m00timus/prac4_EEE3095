@@ -47,6 +47,7 @@ def menu():
         s_count, ss = fetch_scores()
         display_scores(s_count, ss)
     elif option == "P":
+        end_of_game = False
         os.system('clear')
         print("Starting a new round!")
         print("Use the buttons on the Pi to make and submit your guess!")
@@ -124,7 +125,6 @@ def setup():
     GPIO.output(LED_value[1], GPIO.LOW)
     GPIO.output(LED_value[2], GPIO.LOW)
     GPIO.output(buzzer, GPIO.LOW)
-    eeprom.populate_mock_scores()
 
     pi_pwm = GPIO.PWM(LED_accuracy, 1000)
     pi_pwm2 = GPIO.PWM(buzzer, 1000)
@@ -139,8 +139,7 @@ def fetch_scores():
     # get however many scores there are
     
     score_count = eeprom.read_byte(0)                         #Read 1st register to find num scores
-    print("amount of scores is: {}" .format(score_count))
-    
+    print(score_count)
     # Get the scores
     scores_raw = []
     scores_raw = eeprom.read_block(1,score_count*4)         #get amount of scores
@@ -163,13 +162,14 @@ def fetch_scores():
         temp = temp + chr(scores_raw[i])                    #add charachters to temp until its full
         i += 1
         j += 1
+    print(score_count)
     # return back the results
     return score_count, scores                              #returns num of scores in score_count. return 2D list scores with name and score
 
 
 # Save high scores
 def save_scores(name, guess):
-    score_count, scores = fetch_scores()           
+    score_count, scores = fetch_scores()
     scores.append([name, guess])                   #include new score
     scores.sort(key=sort_list)                     #sort list
     score_write = []
@@ -184,7 +184,6 @@ def save_scores(name, guess):
             else:
                 score_write.append(x)
             i += 1
-    print(score_write)
     score_count = score_count + 1               #increment amount of scores
     eeprom.write_byte(0,score_count)            #Update total scores in reg 0 in EEEPROM
     eeprom.write_block(1, score_write)          #write all scores to eeprom
@@ -237,9 +236,9 @@ def btn_guess_pressed():
             name = input("Enter your name: ")
             while len(name) != 3:
                 print("your name should be 3 letters long!\n")
-                name = input("Try again!")
-            print("name: {} geusses: {} " .format(name, guess))          
+                name = input("Try again!")          
             save_scores(name, guess)
+            menu()
         elif diff1 == 1:
             print("off by 1")
         elif diff1 == 2:
