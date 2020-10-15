@@ -288,7 +288,7 @@ def trigger_buzzer(off):  # triggers being given a value by how far off it is
     elif off == 3:
         buzzer_pwm.ChangeFrequency(1)
     else:
-        buzzer.output(GPIO.HIGH)
+        GPIO.output(buzzer, GPIO.HIGH)
     pass
 
 
