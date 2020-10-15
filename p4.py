@@ -20,8 +20,8 @@ LED_accuracy = 32
 btn_submit = 16
 btn_increase = 18
 buzzer = 33
-LED_pwm = None
-buzzer_pwm = None
+LED_pwm = 0
+buzzer_pwm = 0
 eeprom = ES2EEPROMUtils.ES2EEPROM()
 
 
@@ -282,7 +282,7 @@ def accuracy_leds(off):
 # Sound Buzzer
 def trigger_buzzer(off):  # triggers being given a value by how far off it is
     if off == 0:
-        buzzer.OUTPUT(GPIO.LOW)
+        buzzer.output(GPIO.LOW)
     elif off == 1:
         buzzer_pwm.ChangeFrequency(4)
     elif off == 2:
@@ -290,7 +290,7 @@ def trigger_buzzer(off):  # triggers being given a value by how far off it is
     elif off == 3:
         buzzer_pwm.ChangeFrequency(1)
     else:
-        buzzer.OUTPUT(GPIO.HIGH)
+        buzzer.output(GPIO.HIGH)
     pass
 
 
