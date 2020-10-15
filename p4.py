@@ -20,8 +20,6 @@ LED_accuracy = 32
 btn_submit = 16
 btn_increase = 18
 buzzer = 33
-LED_pwm = 0
-buzzer_pwm = 0
 eeprom = ES2EEPROMUtils.ES2EEPROM()
 
 
@@ -113,6 +111,8 @@ def callback2(channel):
 
 # Setup Pins
 def setup():
+    global buzzer_pwm
+    global LED_pwm
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(LED_value[0], GPIO.OUT)
     GPIO.setup(LED_value[1], GPIO.OUT)
@@ -130,8 +130,8 @@ def setup():
 
     LED_pwm = GPIO.PWM(LED_accuracy, 1000)
     buzzer_pwm = GPIO.PWM(buzzer, 1000)
-    LED_pwm.start(50)
-    buzzer_pwm.start(50)
+    LED_pwm.start(0)
+    buzzer_pwm.start(0)
     GPIO.add_event_detect(btn_submit, GPIO.BOTH, callback=callback1, bouncetime=500)
     GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=callback2, bouncetime=500)
     # Setup debouncing and callbacks
