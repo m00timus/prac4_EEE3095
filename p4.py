@@ -164,14 +164,49 @@ def fetch_scores():
         i += 1
         j += 1
     # return back the results
+<<<<<<< HEAD
     return score_count, scores                              #returns num of scores in score_count. return 2D list scores with name and score
+=======
+<<<<<<< HEAD
+
+    temp = eeprom.read_block(1, 4)
+    print(temp)  # [76, 83, 117, 4]
+    # save_scores("ABA", 3)
+    return score_count, scores
+>>>>>>> f50fe55a441f90578299684c4c7e1ad2c20395ae
+
+
+def split(word):
+    return [char for char in word]  
+=======
+    return score_count, scores
+
+>>>>>>> 21c3aea932eba37b6d71be4d7b2d559289c36a91
 
 
 # Save high scores
 def save_scores(name, guess):
+<<<<<<< HEAD
     score_count, scores = fetch_scores()           
     scores.append([name, guess])                   #include new score
     scores.sort(key=sort_list)                     #sort list
+=======
+    score_count, scores = fetch_scores()
+    # include new score
+    scores.append([name, guess])
+    # sort
+<<<<<<< HEAD
+    # for i in range(len(blocks)):
+    #    if guess < blocks[i][3]:
+    #        blocks.sort(key=guess)
+    #    else:
+    #        blocks.sort(key=blocks[1][3])
+
+    # print(blocks)
+=======
+    scores.sort(key=sort_list)
+    print(scores)
+>>>>>>> f50fe55a441f90578299684c4c7e1ad2c20395ae
     score_write = []
     for name_entry in scores:                      #turn 2D scores into 1D raw data list to be sent to eeprom
         i = 0
@@ -185,9 +220,18 @@ def save_scores(name, guess):
                 score_write.append(x)
             i += 1
     print(score_write)
+<<<<<<< HEAD
     score_count = score_count + 1               #increment amount of scores
     eeprom.write_byte(0,score_count)            #Update total scores in reg 0 in EEEPROM
     eeprom.write_block(1, score_write)          #write all scores to eeprom
+=======
+>>>>>>> 21c3aea932eba37b6d71be4d7b2d559289c36a91
+    # update total amount of scores
+    score_count = score_count + 1
+    # write new scores
+    #eeprom.write_byte(0,score_count)            #Update total scores in reg 0 in EEEPROM
+    #eeprom.write_block(1, score_write)
+>>>>>>> f50fe55a441f90578299684c4c7e1ad2c20395ae
     pass
 
 def sort_list(elem):        #used when sorting lists
