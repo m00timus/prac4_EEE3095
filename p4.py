@@ -77,6 +77,11 @@ class Counter():
         return self.cnt
 
 
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(LED_accuracy, GPIO.OUT)
+GPIO.setup(buzzer, GPIO.OUT)
+LED_pwm = GPIO.PWM(LED_accuracy, 1000)
+buzzer_pwm2 = GPIO.PWM(buzzer, 1000)
 count = Counter()
 
 
@@ -112,22 +117,19 @@ def callback2(channel):
 
 # Setup Pins
 def setup():
-    GPIO.setmode(GPIO.BOARD)
+    
     GPIO.setup(LED_value[0], GPIO.OUT)
     GPIO.setup(LED_value[1], GPIO.OUT)
     GPIO.setup(LED_value[2], GPIO.OUT)
-    GPIO.setup(LED_accuracy, GPIO.OUT)
-    GPIO.setup(buzzer, GPIO.OUT)
     GPIO.setup(btn_submit, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(btn_increase, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
     GPIO.output(LED_value[0], GPIO.LOW)
     GPIO.output(LED_value[1], GPIO.LOW)
     GPIO.output(LED_value[2], GPIO.LOW)
     GPIO.output(buzzer, GPIO.LOW)
 
-    pi_pwm = GPIO.PWM(LED_accuracy, 1000)
-    pi_pwm2 = GPIO.PWM(buzzer, 1000)
+    LED_pwm.start(0)
+    buzzer_pwm.start(0)
     GPIO.add_event_detect(btn_submit, GPIO.BOTH, callback=callback1, bouncetime=500)
     GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=callback2, bouncetime=500)
     # Setup debouncing and callbacks
