@@ -47,6 +47,7 @@ def menu():
         s_count, ss = fetch_scores()
         display_scores(s_count, ss)
     elif option == "P":
+        end_of_game = False
         os.system('clear')
         print("Starting a new round!")
         print("Use the buttons on the Pi to make and submit your guess!")
@@ -75,12 +76,6 @@ class Counter():
     def get_value(self):
         return self.cnt
 
-
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(buzzer, GPIO.OUT)
-GPIO.setup(LED_accuracy, GPIO.OUT)
-LED_pwm = GPIO.PWM(LED_accuracy, 1000)
-buzzer_pwm = GPIO.PWM(buzzer, 1000)
 
 count = Counter()
 
@@ -117,19 +112,22 @@ def callback2(channel):
 
 # Setup Pins
 def setup():
-    
+    GPIO.setmode(GPIO.BOARD)
     GPIO.setup(LED_value[0], GPIO.OUT)
     GPIO.setup(LED_value[1], GPIO.OUT)
     GPIO.setup(LED_value[2], GPIO.OUT)
+    GPIO.setup(LED_accuracy, GPIO.OUT)
+    GPIO.setup(buzzer, GPIO.OUT)
     GPIO.setup(btn_submit, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(btn_increase, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
     GPIO.output(LED_value[0], GPIO.LOW)
     GPIO.output(LED_value[1], GPIO.LOW)
     GPIO.output(LED_value[2], GPIO.LOW)
     GPIO.output(buzzer, GPIO.LOW)
-    eeprom.populate_mock_scores()
-    LED_pwm.start(0)
-    buzzer_pwm.start(0)
+
+    pi_pwm = GPIO.PWM(LED_accuracy, 1000)
+    pi_pwm2 = GPIO.PWM(buzzer, 1000)
     GPIO.add_event_detect(btn_submit, GPIO.BOTH, callback=callback1, bouncetime=500)
     GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=callback2, bouncetime=500)
     # Setup debouncing and callbacks
@@ -165,13 +163,14 @@ def fetch_scores():
         temp = temp + chr(scores_raw[i])                    #add charachters to temp until its full
         i += 1
         j += 1
+    print(score_count)
     # return back the results
     return score_count, scores                              #returns num of scores in score_count. return 2D list scores with name and score
 
 
 # Save high scores
 def save_scores(name, guess):
-    score_count, scores = fetch_scores()           
+    score_count, scores = fetch_scores()
     scores.append([name, guess])                   #include new score
     scores.sort(key=sort_list)                     #sort list
     score_write = []
@@ -186,7 +185,6 @@ def save_scores(name, guess):
             else:
                 score_write.append(x)
             i += 1
-    print(score_write)
     score_count = score_count + 1               #increment amount of scores
     eeprom.write_byte(0,score_count)            #Update total scores in reg 0 in EEEPROM
     eeprom.write_block(1, score_write)          #write all scores to eeprom
@@ -235,15 +233,15 @@ def btn_guess_pressed():
         if diff1 == 0:
             GPIO.output(LED_value, GPIO.LOW)
             GPIO.output(LED_accuracy, GPIO.LOW)
+            GPIO.output(buzzer, GPIO.HIGH)
             sguess = str(guesses)
             print("You Won in only " + sguess + " guesses!\n")
             name = input("Enter your name: ")
             while len(name) != 3:
                 print("your name should be 3 letters long!\n")
-                name = input("Try again!")
-            print("name: {} guesses: {} " .format(name, guess))          
+                name = input("Try again!")          
             save_scores(name, guess)
-            os.execl(sys.executable, sys.executable, * sys.argv)
+            menu()
         elif diff1 == 1:
             print("off by 1")
         elif diff1 == 2:
