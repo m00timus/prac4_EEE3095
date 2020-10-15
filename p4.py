@@ -81,7 +81,7 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(LED_accuracy, GPIO.OUT)
 GPIO.setup(buzzer, GPIO.OUT)
 LED_pwm = GPIO.PWM(LED_accuracy, 1000)
-buzzer_pwm2 = GPIO.PWM(buzzer, 1000)
+buzzer_pwm = GPIO.PWM(buzzer, 1000)
 count = Counter()
 
 
