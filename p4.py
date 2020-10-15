@@ -130,8 +130,8 @@ def setup():
 
     LED_pwm = GPIO.PWM(LED_accuracy, 1000)
     buzzer_pwm = GPIO.PWM(buzzer, 1000)
-    LED_pwm.start()
-    buzzer_pwm.start()
+    LED_pwm.start(50)
+    buzzer_pwm.start(50)
     GPIO.add_event_detect(btn_submit, GPIO.BOTH, callback=callback1, bouncetime=500)
     GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=callback2, bouncetime=500)
     # Setup debouncing and callbacks
