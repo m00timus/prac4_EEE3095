@@ -20,8 +20,6 @@ LED_accuracy = 32
 btn_submit = 16
 btn_increase = 18
 buzzer = 33
-LED_pwm = ""
-buzzer_pwm = ""
 eeprom = ES2EEPROMUtils.ES2EEPROM()
 
 
@@ -79,8 +77,11 @@ class Counter():
 
 
 GPIO.setmode(GPIO.BOARD)
+GPIO.setup(buzzer, GPIO.OUT)
+GPIO.output(buzzer, GPIO.LOW)
 LED_pwm = GPIO.PWM(LED_accuracy, 1000)
 buzzer_pwm = GPIO.PWM(buzzer, 1000)
+
 count = Counter()
 
 
@@ -121,16 +122,12 @@ def setup():
     GPIO.setup(LED_value[1], GPIO.OUT)
     GPIO.setup(LED_value[2], GPIO.OUT)
     GPIO.setup(LED_accuracy, GPIO.OUT)
-    GPIO.setup(buzzer, GPIO.OUT)
     GPIO.setup(btn_submit, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(btn_increase, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
     GPIO.output(LED_value[0], GPIO.LOW)
     GPIO.output(LED_value[1], GPIO.LOW)
     GPIO.output(LED_value[2], GPIO.LOW)
-    GPIO.output(buzzer, GPIO.LOW)
     eeprom.populate_mock_scores()
-    
     LED_pwm.start(0)
     buzzer_pwm.start(0)
     GPIO.add_event_detect(btn_submit, GPIO.BOTH, callback=callback1, bouncetime=500)
