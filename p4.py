@@ -20,6 +20,8 @@ LED_accuracy = 32
 btn_submit = 16
 btn_increase = 18
 buzzer = 33
+LED_pwm = None
+buzzer_pwm = None
 eeprom = ES2EEPROMUtils.ES2EEPROM()
 
 
@@ -126,8 +128,8 @@ def setup():
     GPIO.output(buzzer, GPIO.LOW)
     eeprom.populate_mock_scores()
 
-    pi_pwm = GPIO.PWM(LED_accuracy, 1000)
-    pi_pwm2 = GPIO.PWM(buzzer, 1000)
+    LED_pwm = GPIO.PWM(LED_accuracy, 1000)
+    buzzer_pwm = GPIO.PWM(buzzer, 1000)
     GPIO.add_event_detect(btn_submit, GPIO.BOTH, callback=callback1, bouncetime=500)
     GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=callback2, bouncetime=500)
     # Setup debouncing and callbacks
@@ -228,18 +230,20 @@ def btn_guess_pressed():
         # Compare the actual value with the user value displayed on the LEDs
         diff1 = guess - num
         diff1 = abs(diff1)
+        accuracy_leds(diff1)
+        trigger_buzzer(diff1)
         if diff1 == 0:
             GPIO.output(LED_value, GPIO.LOW)
             GPIO.output(LED_accuracy, GPIO.LOW)
-            GPIO.output(buzzer, GPIO.HIGH)
             sguess = str(guesses)
             print("You Won in only " + sguess + " guesses!\n")
             name = input("Enter your name: ")
             while len(name) != 3:
                 print("your name should be 3 letters long!\n")
                 name = input("Try again!")
-            print("name: {} geusses: {} " .format(name, guess))          
+            print("name: {} guesses: {} " .format(name, guess))          
             save_scores(name, guess)
+            os.execl(sys.executable, sys.executable, * sys.argv)
         elif diff1 == 1:
             print("off by 1")
         elif diff1 == 2:
@@ -264,7 +268,9 @@ def btn_guess_pressed():
 
 
 # LED Brightness
-def accuracy_leds():
+def accuracy_leds(off):
+    # temp = 
+    # LED_pwm.ChangeDutyCycle(temp)
     # Set the brightness of the LED based on how close the guess is to the answer
     # - The % brightness should be directly proportional to the % "closeness"
     # - For example if the answer is 6 and a user guesses 4, the brightness should be at 4/6*100 = 66%
@@ -272,13 +278,17 @@ def accuracy_leds():
     pass
 
 # Sound Buzzer
-def trigger_buzzer():
-    # The buzzer operates differently from the LED
-    # While we want the brightness of the LED to change(duty cycle), we want the frequency of the buzzer to change
-    # The buzzer duty cycle should be left at 50%
-    # If the user is off by an absolute value of 3, the buzzer should sound once every second
-    # If the user is off by an absolute value of 2, the buzzer should sound twice every second
-    # If the user is off by an absolute value of 1, the buzzer should sound 4 times a second
+def trigger_buzzer(off):  # triggers being given a value by how far off it is
+    if off == 0:
+        buzzer.OUTPUT(GPIO.LOW)
+    elif off == 1:
+        buzzer_pwm.ChangeFrequency(4)
+    elif off == 2:
+        buzzer_pwm.ChangeFrequency(2)
+    elif off == 3:
+        buzzer_pwm.ChangeFrequency(1)
+    else:
+        buzzer.OUTPUT(GPIO.HIGH)
     pass
 
 
