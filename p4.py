@@ -197,7 +197,7 @@ def sort_list(elem):        #used when sorting lists
 
 # Generate guess number
 def generate_number():
-    return random.randint(0, pow(2, 3)-1)
+    return random.randint(0, pow(2, 3)-1) 
 
 
 num = generate_number()
@@ -205,12 +205,12 @@ num = generate_number()
 
 # Increase button pressed
 def btn_increase_pressed():
-    temp = count.get_value()
+    temp = count.get_value() # get count value for LEDs
     GPIO.output(LED_value[0], temp & 0x01)
     GPIO.output(LED_value[1], temp & 0x02)
-    GPIO.output(LED_value[2], temp & 0x04)
+    GPIO.output(LED_value[2], temp & 0x04)  # set respective pins high or low
     count.increment()
-    if count.get_value() > 7:
+    if count.get_value() > 7:  # reset count if too high
         count.reset()
     pass
 
@@ -219,12 +219,12 @@ def btn_increase_pressed():
 def btn_guess_pressed():
     global num
     global guesses
-    start_time = time.time()
+    start_time = time.time()  # for long button press
     diff = 0
-    while (GPIO.input(btn_submit) == 0) and (diff < 2):
+    while (GPIO.input(btn_submit) == 0) and (diff < 2):  # while button pulled low and not held too long..
         now_time = time.time()
-        diff = - start_time + now_time
-    if diff < 2:
+        diff = - start_time + now_time  # get diff in time
+    if diff < 2:  # if less than 2 second press do this
         guesses += 1
         guess = count.get_value()
         # Compare the actual value with the user value displayed on the LEDs
@@ -232,7 +232,7 @@ def btn_guess_pressed():
         diff1 = abs(diff1)
         accuracy_leds(num, guess)
         trigger_buzzer(diff1)
-        if diff1 == 0:
+        if diff1 == 0:  # if guess corrctly
             GPIO.output(LED_value, GPIO.LOW)
             GPIO.output(LED_accuracy, GPIO.LOW)
             GPIO.output(buzzer, GPIO.HIGH)
@@ -244,58 +244,45 @@ def btn_guess_pressed():
                 name = input("Try again!")          
             save_scores(name, guess)
             os.execl(sys.executable, sys.executable, * sys.argv)
-        elif diff1 == 1:
-            print("off by 1")
-        elif diff1 == 2:
-            print("off by 2")
-        elif diff1 == 3:
-            print("off by 3")
+        # elif diff1 == 1:                                        # if guess is close to correct
+            # print("off by 1")
+        # elif diff1 == 2:
+            # print("off by 2")
+        # elif diff1 == 3:
+            # print("off by 3")
     else:
         # If they've pressed and held the button, clear up the GPIO and take them back to the menu screen
         os.execl(sys.executable, sys.executable, * sys.argv)
-
-    
-    # Change the PWM LED
-    # if it's close enough, adjust the buzzer
-    # if it's an exact guess:
-    # - Disable LEDs and Buzzer
-    # - tell the user and prompt them for a name
-    # - fetch all the scores
-    # - add the new score
-    # - sort the scores
-    # - Store the scores back to the EEPROM, being sure to update the score count
     pass
 
 
 # LED Brightness
-def accuracy_leds(answer, guess):
-    if answer >= guess:
-        temp = guess/answer*100
-    elif answer == 0:
-        LED_pwm.ChangeDutyCycle(0)
+def accuracy_leds(answer, guess):  # receives answer and guess value
+
+    if answer >= guess: 
+        temp = guess/answer*100  # use this form if ans > guess
+    elif answer - guess == 0:
+        LED_pwm.ChangeDutyCycle(0)  # set duty cycle to zero if correct
     else:
-        temp = ((8-guess)/(8-answer))*100
-    LED_pwm.ChangeDutyCycle(temp)
-    # Set the brightness of the LED based on how close the guess is to the answer
-    # - The % brightness should be directly proportional to the % "closeness"
-    # - For example if the answer is 6 and a user guesses 4, the brightness should be at 4/6*100 = 66%
-    # - If they guessed 7, the brightness would be at ((8-7)/(8-6)*100 = 50%
+        temp = ((8-guess)/(8-answer))*100  # else use this
+
+    LED_pwm.ChangeDutyCycle(temp)  # update duty cycle
     pass
 
 # Sound Buzzer
 def trigger_buzzer(off):  # triggers being given a value by how far off it is
-    buzzer_pwm.ChangeDutyCycle(50)
+
+    buzzer_pwm.ChangeDutyCycle(50)  #ensure buzzer has a duty cycle
     if off == 0:
-        GPIO.output(buzzer, GPIO.LOW)
+        GPIO.output(buzzer, GPIO.LOW)   # set low if correct
     elif off == 1:
         buzzer_pwm.ChangeFrequency(4)
-        print("change freq to 4hz")
     elif off == 2:
         buzzer_pwm.ChangeFrequency(2)
     elif off == 3:
-        buzzer_pwm.ChangeFrequency(1)
+        buzzer_pwm.ChangeFrequency(1)  # update frequencies based on guess
     else:
-        GPIO.output(buzzer, GPIO.HIGH)
+        GPIO.output(buzzer, GPIO.HIGH)  # else keep it high
     pass
 
 
