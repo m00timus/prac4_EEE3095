@@ -63,8 +63,8 @@ def menu():
         print("Invalid option. Please select a valid one!")
 
 
-class Counter():
-    def __init__(self):
+class Counter():            #counter class created for ease of use
+    def __init__(self):      #definitions self explanitory
         self.cnt = 0
 
     def increment(self):
@@ -77,7 +77,7 @@ class Counter():
         return self.cnt
 
 
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BOARD)            #set PWM pins
 GPIO.setup(LED_accuracy, GPIO.OUT)
 GPIO.setup(buzzer, GPIO.OUT)
 LED_pwm = GPIO.PWM(LED_accuracy, 1000)
@@ -90,12 +90,12 @@ def display_scores(count, raw_data):
     print("There are {} scores. Here are the top 3!".format(count))
     # print out the scores in the required format
     scores = raw_data
-    if (count == 0):
+    if (count == 0):                                        #situation where there is no scores recorded
         print("sadly there are non :(")
     else:
         scores.sort(key=sort_list)                    #sort list
         i = 0
-        for entry in scores:
+        for entry in scores:                            #dislay top 3 scores
             if (i == 3):
                 break
             print("{} - {} took {} guesses".format((i + 1),entry[0],entry[1]))
@@ -117,21 +117,21 @@ def callback2(channel):
 
 # Setup Pins
 def setup():
-    
-    GPIO.setup(LED_value[0], GPIO.OUT)
+                                            #pin setup
+    GPIO.setup(LED_value[0], GPIO.OUT)      #set LED's to outputs
     GPIO.setup(LED_value[1], GPIO.OUT)
     GPIO.setup(LED_value[2], GPIO.OUT)
-    GPIO.setup(btn_submit, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(btn_submit, GPIO.IN, pull_up_down=GPIO.PUD_UP)   #set push buttons to inputs and pulldown
     GPIO.setup(btn_increase, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.output(LED_value[0], GPIO.LOW)
+    GPIO.output(LED_value[0], GPIO.LOW)     #set initial value of LED's to 0
     GPIO.output(LED_value[1], GPIO.LOW)
     GPIO.output(LED_value[2], GPIO.LOW)
     GPIO.output(buzzer, GPIO.LOW)
 
     LED_pwm.start(0)
     buzzer_pwm.start(0)
-    GPIO.add_event_detect(btn_submit, GPIO.BOTH, callback=callback1, bouncetime=500)
-    GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=callback2, bouncetime=500)
+    GPIO.add_event_detect(btn_submit, GPIO.BOTH, callback=callback1, bouncetime=500)        #inturrupt when increase button is pressed
+    GPIO.add_event_detect(btn_increase, GPIO.FALLING, callback=callback2, bouncetime=500)   #inturreupt when sumbit button is pressed
     # Setup debouncing and callbacks
     pass
 
