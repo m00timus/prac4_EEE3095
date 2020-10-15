@@ -111,8 +111,6 @@ def callback2(channel):
 
 # Setup Pins
 def setup():
-    global buzzer_pwm
-    global LED_pwm
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(LED_value[0], GPIO.OUT)
     GPIO.setup(LED_value[1], GPIO.OUT)
@@ -282,7 +280,7 @@ def accuracy_leds(off):
 # Sound Buzzer
 def trigger_buzzer(off):  # triggers being given a value by how far off it is
     if off == 0:
-        buzzer.output(GPIO.LOW)
+        GPIO.output(buzzer, GPIO.LOW)
     elif off == 1:
         buzzer_pwm.ChangeFrequency(4)
     elif off == 2:
