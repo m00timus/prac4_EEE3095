@@ -271,6 +271,8 @@ def btn_guess_pressed():
 def accuracy_leds(answer, guess):
     if answer >= guess:
         temp = guess/answer*100
+    elif answer == 0:
+        LED_pwm.ChangeDutyCycle(0)
     else:
         temp = ((8-guess)/(8-answer))*100
     LED_pwm.ChangeDutyCycle(temp)
@@ -282,6 +284,7 @@ def accuracy_leds(answer, guess):
 
 # Sound Buzzer
 def trigger_buzzer(off):  # triggers being given a value by how far off it is
+    buzzer_pwm.ChangeDutyCycle(50)
     if off == 0:
         GPIO.output(buzzer, GPIO.LOW)
     elif off == 1:
